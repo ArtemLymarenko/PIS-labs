@@ -25,7 +25,7 @@ func TestProjectRepository_FindById(t *testing.T) {
 	t.Run("should return error when project not found", func(t *testing.T) {
 		_, err := projectRepo.FindById(ctx, "3")
 		assert.Error(t, err)
-		assert.Equal(t, "project not found", err.Error())
+		assert.Equal(t, ErrProjectNotFound, err)
 	})
 }
 
@@ -43,12 +43,6 @@ func TestProjectRepository_FindByNameMany(t *testing.T) {
 		projects, err := projectRepo.FindByNameMany(ctx, "Project A")
 		assert.NoError(t, err)
 		assert.Len(t, projects, 2)
-	})
-
-	t.Run("should return error when no projects found", func(t *testing.T) {
-		_, err := projectRepo.FindByNameMany(ctx, "Project C")
-		assert.Error(t, err)
-		assert.Equal(t, "no projects found", err.Error())
 	})
 }
 
@@ -86,7 +80,7 @@ func TestProjectRepository_Update(t *testing.T) {
 		nonExistentProject := entity.Project{Id: "2", Name: "Non-existent Project"}
 		err := projectRepo.Update(ctx, nonExistentProject)
 		assert.Error(t, err)
-		assert.Equal(t, "project not found", err.Error())
+		assert.Equal(t, ErrProjectNotUpdated, err)
 	})
 }
 
@@ -106,9 +100,9 @@ func TestProjectRepository_DeleteById(t *testing.T) {
 		assert.Equal(t, "Project B", projectRepo.projects[0].Name)
 	})
 
-	t.Run("should return error when deleting non-existent project", func(t *testing.T) {
+	t.Run("should not return error when deleting non-existent project", func(t *testing.T) {
 		err := projectRepo.DeleteById(ctx, "3")
-		assert.Error(t, err)
-		assert.Equal(t, "project not found", err.Error())
+		assert.NoError(t, err)
+		assert.Equal(t, nil, err)
 	})
 }

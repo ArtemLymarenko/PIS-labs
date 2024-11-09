@@ -6,6 +6,11 @@ import (
 	"errors"
 )
 
+var (
+	ErrProjectNotFound   = errors.New("failed to find project")
+	ErrProjectNotUpdated = errors.New("failed to update project")
+)
+
 type Project interface {
 	FindById(ctx context.Context, id string) (entity.Project, error)
 	FindByNameMany(ctx context.Context, name string) ([]entity.Project, error)
@@ -18,49 +23,49 @@ type ProjectRepository struct {
 	projects []entity.Project
 }
 
-func (p *ProjectRepository) FindById(ctx context.Context, id string) (entity.Project, error) {
-	for _, project := range p.projects {
+func (repository *ProjectRepository) FindById(ctx context.Context, id string) (entity.Project, error) {
+	for _, project := range repository.projects {
 		if project.Id == id {
 			return project, nil
 		}
 	}
-	return entity.Project{}, errors.New("project not found")
+	return entity.Project{}, ErrProjectNotFound
 }
 
-func (p *ProjectRepository) FindByNameMany(ctx context.Context, name string) ([]entity.Project, error) {
+func (repository *ProjectRepository) FindByNameMany(ctx context.Context, name string) ([]entity.Project, error) {
 	var foundProjects []entity.Project
-	for _, project := range p.projects {
+	for _, project := range repository.projects {
 		if project.Name == name {
 			foundProjects = append(foundProjects, project)
 		}
 	}
-	if len(foundProjects) == 0 {
-		return nil, errors.New("no projects found")
-	}
+
 	return foundProjects, nil
 }
 
-func (p *ProjectRepository) Save(ctx context.Context, project entity.Project) error {
-	p.projects = append(p.projects, project)
+func (repository *ProjectRepository) Save(ctx context.Context, newProject entity.Project) error {
+	repository.projects = append(repository.projects, newProject)
 	return nil
 }
 
-func (p *ProjectRepository) Update(ctx context.Context, project entity.Project) error {
-	for i, v := range p.projects {
-		if v.Id == project.Id {
-			p.projects[i] = project
+func (repository *ProjectRepository) Update(ctx context.Context, newProject entity.Project) error {
+	for i, project := range repository.projects {
+		if project.Id == newProject.Id {
+			repository.projects[i] = newProject
 			return nil
 		}
 	}
-	return errors.New("project not found")
+
+	return ErrProjectNotUpdated
 }
 
-func (p *ProjectRepository) DeleteById(ctx context.Context, id string) error {
-	for i, project := range p.projects {
+func (repository *ProjectRepository) DeleteById(ctx context.Context, id string) error {
+	for i, project := range repository.projects {
 		if project.Id == id {
-			p.projects = append(p.projects[:i], p.projects[i+1:]...)
+			repository.projects = append(repository.projects[:i], repository.projects[i+1:]...)
 			return nil
 		}
 	}
-	return errors.New("project not found")
+
+	return nil
 }

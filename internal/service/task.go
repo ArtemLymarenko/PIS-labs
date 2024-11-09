@@ -4,44 +4,49 @@ import (
 	"PIS_labs/internal/domain/entity"
 	"PIS_labs/internal/domain/repository"
 	"context"
+	"errors"
+)
+
+var (
+	ErrInvalidTaskEntity = errors.New("failed to validate task entity")
 )
 
 type Task struct {
-	repo repository.Task
+	taskRepository repository.Task
 }
 
-func NewTask(repo repository.Task) *Task {
+func NewTask(taskRepository repository.Task) *Task {
 	return &Task{
-		repo: repo,
+		taskRepository: taskRepository,
 	}
 }
 
-func (s *Task) FindById(ctx context.Context, id string) (entity.Task, error) {
-	return s.repo.FindById(ctx, id)
+func (service *Task) FindById(ctx context.Context, id string) (entity.Task, error) {
+	return service.taskRepository.FindById(ctx, id)
 }
 
-func (s *Task) FindByNameMany(ctx context.Context, name string) ([]entity.Task, error) {
-	return s.repo.FindByNameMany(ctx, name)
+func (service *Task) FindByNameMany(ctx context.Context, name string) ([]entity.Task, error) {
+	return service.taskRepository.FindByNameMany(ctx, name)
 }
 
-func (s *Task) Save(ctx context.Context, task entity.Task) error {
+func (service *Task) Save(ctx context.Context, task entity.Task) error {
 	err := task.Validate()
 	if err != nil {
-		return err
+		return ErrInvalidTaskEntity
 	}
 
-	return s.repo.Save(ctx, task)
+	return service.taskRepository.Save(ctx, task)
 }
 
-func (s *Task) Update(ctx context.Context, task entity.Task) error {
+func (service *Task) Update(ctx context.Context, task entity.Task) error {
 	err := task.Validate()
 	if err != nil {
-		return err
+		return ErrInvalidTaskEntity
 	}
 
-	return s.repo.Update(ctx, task)
+	return service.taskRepository.Update(ctx, task)
 }
 
-func (s *Task) DeleteById(ctx context.Context, id string) error {
-	return s.repo.DeleteById(ctx, id)
+func (service *Task) DeleteById(ctx context.Context, id string) error {
+	return service.taskRepository.DeleteById(ctx, id)
 }
