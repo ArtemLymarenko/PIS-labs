@@ -35,6 +35,10 @@ func (service *Project) SaveProject(ctx context.Context, project entity.Project)
 		return ErrInvalidProjectEntity
 	}
 
+	//function to generate id (example: google/uuid)
+	id := "123456789"
+	project.SetId(id)
+
 	return service.projectRepo.Save(ctx, project)
 }
 

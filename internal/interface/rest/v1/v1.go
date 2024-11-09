@@ -3,6 +3,8 @@ package v1
 import (
 	"PIS_labs/internal/interface/rest/handlers"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func MustGetGinRouter(controller *handlers.Handlers) *gin.Engine {
@@ -22,12 +24,22 @@ func MustGetGinRouter(controller *handlers.Handlers) *gin.Engine {
 		Register = "/register"
 	)
 
+	const (
+		Docs    = "/docs"
+		Swagger = "/swagger/*any"
+	)
+
 	apiPublicV1Routes := router.Group(ApiV1)
 	{
 		auth := apiPublicV1Routes.Group(Auth)
 		{
 			auth.POST(Login, controller.AuthHandler.Login)
 			auth.POST(Register, controller.AuthHandler.Register)
+		}
+
+		docs := apiPublicV1Routes.Group(Docs)
+		{
+			docs.GET(Swagger, ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
 	}
 
@@ -39,15 +51,15 @@ func MustGetGinRouter(controller *handlers.Handlers) *gin.Engine {
 		projects := apiPrivateV1Routes.Group(Projects)
 		{
 			projects.GET(ById, controller.ProjectHandler.GetProjectById)
-			projects.POST(Root, controller.ProjectHandler.SaveProject)
-			projects.PUT(ById, controller.ProjectHandler.UpdateProject)
+			projects.POST(Root, controller.ProjectHandler.CreateProject)
+			projects.PUT(ById, controller.ProjectHandler.UpdateProjectById)
 			projects.DELETE(ById, controller.ProjectHandler.DeleteProjectById)
 		}
 		tasks := apiPrivateV1Routes.Group(Tasks)
 		{
 			tasks.GET(ById, controller.TaskHandler.GetTaskById)
-			tasks.POST(Root, controller.TaskHandler.SaveTask)
-			tasks.PUT(ById, controller.TaskHandler.UpdateTask)
+			tasks.POST(Root, controller.TaskHandler.CreateTask)
+			tasks.PUT(ById, controller.TaskHandler.UpdateTaskById)
 			tasks.DELETE(ById, controller.TaskHandler.DeleteTaskById)
 		}
 	}

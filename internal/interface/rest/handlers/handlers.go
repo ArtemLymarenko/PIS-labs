@@ -9,5 +9,9 @@ type Handlers struct {
 // New should receive ProjectHandlerImpl and TaskHandlerImpl as parameters
 // but to simplify, we would not do this now
 func New() *Handlers {
-	return &Handlers{}
+	return &Handlers{
+		ProjectHandler: NewProjectHandler(),
+		TaskHandler:    NewTaskHandler(),
+		AuthHandler:    NewAuthHandler(),
+	}
 }

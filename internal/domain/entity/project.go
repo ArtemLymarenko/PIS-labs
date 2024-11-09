@@ -4,26 +4,26 @@ import (
 	"time"
 )
 
-type Status string
+type ProjectStatus string
 
 const (
-	IDLE   Status = "idle"
-	ACTIVE Status = "active"
-	CLOSED Status = "closed"
+	Idle   ProjectStatus = "idle"
+	Active ProjectStatus = "active"
+	Closed ProjectStatus = "closed"
 )
 
 type Project struct {
 	Id                string
 	Name              string
 	Description       string
-	Status            Status
+	Status            ProjectStatus
 	ProductionStartAt time.Time
 	ProductionEndAt   time.Time
 }
 
 func NewProject(
 	id, name, description string,
-	status Status,
+	status ProjectStatus,
 	productionStartAt, productionEndAt time.Time,
 ) Project {
 	return Project{
@@ -36,6 +36,10 @@ func NewProject(
 	}
 }
 
-func (p *Project) Validate() error {
+func (project *Project) SetId(id string) {
+	project.Id = id
+}
+
+func (project *Project) Validate() error {
 	return nil
 }
