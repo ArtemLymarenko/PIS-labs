@@ -7,6 +7,8 @@ import (
 	"errors"
 )
 
+//All package validations are repeated several times
+
 // Naming is bad
 type Proj struct {
 	//Here is using specific implementation instead of interface
@@ -20,6 +22,7 @@ func NewProj(repo repository.ProjectRepository) *Proj {
 }
 
 // Naming is bad
+// Better to use explicit names like FindProject and service instead of s
 func (s *Proj) Find(ctx context.Context, id string) (entity.Project, error) {
 	//Unnecessary validation, better to move this logic to domain
 	if id == "" {
@@ -43,7 +46,7 @@ func (s *Proj) FindName(ctx context.Context, name string) ([]entity.Project, err
 		//Inline errors is bad, better to move to separate package variable
 		return nil, errors.New("error occurred while searching projects")
 	}
-	//Unnecessary logic
+	//Unnecessary logic and magic numbers are used
 	if len(projects) > 0 {
 		for _, project := range projects {
 			if project.Name == name {

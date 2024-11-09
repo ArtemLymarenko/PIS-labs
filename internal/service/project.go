@@ -12,41 +12,41 @@ var (
 )
 
 type Project struct {
-	repo repository.Project
+	projectRepo repository.Project
 }
 
-func NewProject(repo repository.Project) *Project {
+func NewProject(projectRepo repository.Project) *Project {
 	return &Project{
-		repo: repo,
+		projectRepo: projectRepo,
 	}
 }
 
-func (s *Project) FindProjectById(ctx context.Context, id string) (entity.Project, error) {
-	return s.repo.FindById(ctx, id)
+func (service *Project) FindProjectById(ctx context.Context, id string) (entity.Project, error) {
+	return service.projectRepo.FindById(ctx, id)
 }
 
-func (s *Project) FindProjectsByName(ctx context.Context, name string) ([]entity.Project, error) {
-	return s.repo.FindByNameMany(ctx, name)
+func (service *Project) FindProjectsByName(ctx context.Context, name string) ([]entity.Project, error) {
+	return service.projectRepo.FindByNameMany(ctx, name)
 }
 
-func (s *Project) SaveProject(ctx context.Context, project entity.Project) error {
+func (service *Project) SaveProject(ctx context.Context, project entity.Project) error {
 	err := project.Validate()
 	if err != nil {
 		return ErrInvalidProjectEntity
 	}
 
-	return s.repo.Save(ctx, project)
+	return service.projectRepo.Save(ctx, project)
 }
 
-func (s *Project) UpdateProject(ctx context.Context, project entity.Project) error {
+func (service *Project) UpdateProject(ctx context.Context, project entity.Project) error {
 	err := project.Validate()
 	if err != nil {
 		return ErrInvalidProjectEntity
 	}
 
-	return s.repo.Update(ctx, project)
+	return service.projectRepo.Update(ctx, project)
 }
 
-func (s *Project) DeleteProjectById(ctx context.Context, id string) error {
-	return s.repo.DeleteById(ctx, id)
+func (service *Project) DeleteProjectById(ctx context.Context, id string) error {
+	return service.projectRepo.DeleteById(ctx, id)
 }
