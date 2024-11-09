@@ -46,7 +46,6 @@ func (p *ProjectRepository) Save(ctx context.Context, project entity.Project) er
 }
 
 func (p *ProjectRepository) Update(ctx context.Context, project entity.Project) error {
-	// Оновлюємо проект за ID
 	for i, v := range p.projects {
 		if v.Id == project.Id {
 			p.projects[i] = project

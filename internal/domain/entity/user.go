@@ -1,7 +1,5 @@
 package entity
 
-import "errors"
-
 type User struct {
 	Id       string
 	Email    string
@@ -17,5 +15,5 @@ func NewUser(id, email, password string) User {
 }
 
 func (u *User) Validate() error {
-	return errors.New("user is not valid")
+	return nil
 }

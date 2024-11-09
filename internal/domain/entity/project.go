@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"errors"
 	"time"
 )
 
@@ -38,5 +37,5 @@ func NewProject(
 }
 
 func (p *Project) Validate() error {
-	return errors.New("project is not valid")
+	return nil
 }

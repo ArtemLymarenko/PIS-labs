@@ -4,14 +4,13 @@ import (
 	"PIS_labs/internal/domain/entity"
 	"PIS_labs/internal/domain/repository"
 	"context"
-	"errors"
 )
 
 type Project struct {
-	repo repository.ProjectRepository
+	repo repository.Project
 }
 
-func NewProject(repo repository.ProjectRepository) *Project {
+func NewProject(repo repository.Project) *Project {
 	return &Project{
 		repo: repo,
 	}
@@ -26,21 +25,21 @@ func (s *Project) FindByNameMany(ctx context.Context, name string) ([]entity.Pro
 }
 
 func (s *Project) Save(ctx context.Context, project entity.Project) error {
-	if project.Name == "" {
-		return errors.New("project name cannot be empty")
+	err := project.Validate()
+	if err != nil {
+		return err
 	}
 
 	return s.repo.Save(ctx, project)
 }
 
 func (s *Project) Update(ctx context.Context, project entity.Project) error {
-	existingProject, err := s.repo.FindById(ctx, project.Id)
+	err := project.Validate()
 	if err != nil {
 		return err
 	}
 
-	// Викликаємо метод з репозиторію для оновлення
-	return s.repo.Update(ctx, existingProject)
+	return s.repo.Update(ctx, project)
 }
 
 func (s *Project) DeleteById(ctx context.Context, id string) error {

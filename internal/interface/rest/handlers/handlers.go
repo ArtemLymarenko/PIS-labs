@@ -3,6 +3,7 @@ package handlers
 type Handlers struct {
 	ProjectHandler ProjectHandlerImpl
 	TaskHandler    TaskHandlerImpl
+	AuthHandler    AuthHandlerImpl
 }
 
 // New should receive ProjectHandlerImpl and TaskHandlerImpl as parameters

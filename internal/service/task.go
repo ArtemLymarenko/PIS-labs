@@ -7,10 +7,10 @@ import (
 )
 
 type Task struct {
-	repo repository.TaskRepository
+	repo repository.Task
 }
 
-func NewTask(repo repository.TaskRepository) *Task {
+func NewTask(repo repository.Task) *Task {
 	return &Task{
 		repo: repo,
 	}

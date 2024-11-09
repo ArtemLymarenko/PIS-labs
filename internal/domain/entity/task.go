@@ -1,7 +1,5 @@
 package entity
 
-import "errors"
-
 type Task struct {
 	Id          string
 	Name        string
@@ -19,5 +17,5 @@ func NewTask(id, name, description, projectId string) Task {
 }
 
 func (t *Task) Validate() error {
-	return errors.New("task is not valid")
+	return nil
 }
