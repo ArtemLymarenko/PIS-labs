@@ -6,6 +6,8 @@ import (
 	"errors"
 )
 
+// Task defines the interface for managing task data in the repository layer.
+// It includes methods for finding, saving, updating, and deleting tasks.
 type Task interface {
 	FindById(ctx context.Context, id string) (entity.Task, error)
 	FindByNameMany(ctx context.Context, name string) ([]entity.Task, error)
@@ -14,10 +16,18 @@ type Task interface {
 	DeleteById(ctx context.Context, id string) error
 }
 
+// TaskRepository is an implementation of the Task interface.
+// It holds a slice of tasks and provides methods to perform CRUD operations.
 type TaskRepository struct {
 	tasks []entity.Task
 }
 
+// FindById searches for a task by its unique identifier.
+// Parameters:
+// - ctx: The context for managing the request.
+// - id: The unique identifier of the task.
+// Returns:
+// - The found task, if any, or an error if the task is not found.
 func (t *TaskRepository) FindById(ctx context.Context, id string) (entity.Task, error) {
 	for _, task := range t.tasks {
 		if task.Id == id {
@@ -27,6 +37,12 @@ func (t *TaskRepository) FindById(ctx context.Context, id string) (entity.Task, 
 	return entity.Task{}, errors.New("task not found")
 }
 
+// FindByNameMany searches for tasks that match the specified name.
+// Parameters:
+// - ctx: The context for managing the request.
+// - name: The name of the tasks to search for.
+// Returns:
+// - A slice of matching tasks, or an error if no tasks match.
 func (t *TaskRepository) FindByNameMany(ctx context.Context, name string) ([]entity.Task, error) {
 	var foundTasks []entity.Task
 	for _, task := range t.tasks {
@@ -40,11 +56,23 @@ func (t *TaskRepository) FindByNameMany(ctx context.Context, name string) ([]ent
 	return foundTasks, nil
 }
 
+// Save adds a new task to the repository.
+// Parameters:
+// - ctx: The context for managing the request.
+// - task: The task to be saved.
+// Returns:
+// - An error, if any, during the saving process.
 func (t *TaskRepository) Save(ctx context.Context, task entity.Task) error {
 	t.tasks = append(t.tasks, task)
 	return nil
 }
 
+// Update modifies an existing task in the repository.
+// Parameters:
+// - ctx: The context for managing the request.
+// - task: The updated task data.
+// Returns:
+// - An error, if the task could not be updated.
 func (t *TaskRepository) Update(ctx context.Context, task entity.Task) error {
 	for i, tsk := range t.tasks {
 		if tsk.Id == task.Id {
@@ -55,6 +83,12 @@ func (t *TaskRepository) Update(ctx context.Context, task entity.Task) error {
 	return errors.New("task not found")
 }
 
+// DeleteById removes a task from the repository by its unique identifier.
+// Parameters:
+// - ctx: The context for managing the request.
+// - id: The unique identifier of the task to be deleted.
+// Returns:
+// - An error, if any, during the deletion process.
 func (t *TaskRepository) DeleteById(ctx context.Context, id string) error {
 	for i, task := range t.tasks {
 		if task.Id == id {
